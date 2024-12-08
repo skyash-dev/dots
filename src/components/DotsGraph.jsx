@@ -187,12 +187,17 @@ function DotsGraph() {
             ctx.stroke();
           }}
           nodePointerAreaPaint={(node, color, ctx) => {
-            // Define pointer area for interactivity
-            ctx.beginPath();
-            ctx.arc(node.x, node.y, 20, 0, 2 * Math.PI, false);
+            const imgSize = 60;
+            // Ensure clickable area is defined
             ctx.fillStyle = color;
-            ctx.fill();
+            ctx.fillRect(
+              node.x - imgSize / 2,
+              node.y - imgSize / 2 + 30,
+              imgSize,
+              imgSize
+            );
           }}
+          enableNodeDrag={true}
         />
       </div>
     </>
