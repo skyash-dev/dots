@@ -14,29 +14,53 @@ function DotsGraph() {
     nodes: [
       {
         id: 0,
-        name: "zero",
-        img: "https://images.pexels.com/photos/28010646/pexels-photo-28010646/free-photo-of-a-building-with-a-red-door-and-a-green-plant.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        name: "Birth & Adoption",
+        img: "https://images.pexels.com/photos/447340/pexels-photo-447340.jpeg?auto=compress&cs=tinysrgb&w=600",
       },
       {
         id: 1,
-        name: "one",
-        img: "https://images.pexels.com/photos/28010646/pexels-photo-28010646/free-photo-of-a-building-with-a-red-door-and-a-green-plant.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        name: "College Dropout",
+        img: "https://images.pexels.com/photos/256401/pexels-photo-256401.jpeg?auto=compress&cs=tinysrgb&w=600",
       },
       {
         id: 2,
-        name: "two",
-        img: "https://images.pexels.com/photos/28010646/pexels-photo-28010646/free-photo-of-a-building-with-a-red-door-and-a-green-plant.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        name: "Calligraphy Class",
+        img: "https://images.pexels.com/photos/356052/pexels-photo-356052.jpeg?auto=compress&cs=tinysrgb&w=600",
       },
       {
         id: 3,
-        name: "three",
-        img: "https://images.pexels.com/photos/28010646/pexels-photo-28010646/free-photo-of-a-building-with-a-red-door-and-a-green-plant.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        name: "Apple Founded",
+        img: "https://images.pexels.com/photos/1391907/pexels-photo-1391907.jpeg?auto=compress&cs=tinysrgb&w=600",
+      },
+      {
+        id: 4,
+        name: "Next Inc.",
+        img: "https://images.pexels.com/photos/3937174/pexels-photo-3937174.jpeg?auto=compress&cs=tinysrgb&w=600",
+      },
+      {
+        id: 5,
+        name: "Pixar Success",
+        img: "https://images.pexels.com/photos/4348403/pexels-photo-4348403.jpeg?auto=compress&cs=tinysrgb&w=600",
+      },
+      {
+        id: 6,
+        name: "Return to Apple",
+        img: "https://images.pexels.com/photos/4551090/pexels-photo-4551090.jpeg?auto=compress&cs=tinysrgb&w=600",
+      },
+      {
+        id: 7,
+        name: "iPhone Launch",
+        img: "https://images.pexels.com/photos/6078124/pexels-photo-6078124.jpeg?auto=compress&cs=tinysrgb&w=600",
       },
     ],
     links: [
-      { source: 0, target: 2 },
-      { source: 0, target: 3 },
       { source: 0, target: 1 },
+      { source: 1, target: 2 },
+      { source: 2, target: 3 },
+      { source: 3, target: 4 },
+      { source: 4, target: 5 },
+      { source: 5, target: 6 },
+      { source: 6, target: 7 },
     ],
   });
   const [id, setId] = useState(graphData.nodes ? graphData.nodes.length : 0);
@@ -66,26 +90,37 @@ function DotsGraph() {
 
   // Cache to store loaded images
   const imageCache = {};
+  const defaultImage =
+    "https://images.pexels.com/photos/28010646/pexels-photo-28010646/free-photo-of-a-building-with-a-red-door-and-a-green-plant.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
 
   const loadImage = (url) => {
-    if (imageCache[url]) {
-      return imageCache[url]; // Return cached image if available
+    if (!imageCache[url]) {
+      const img = new Image();
+      img.src = url;
+
+      img.onerror = () => {
+        img.src = defaultImage; // Fallback image
+        fgRef.current?.refresh();
+      };
+
+      imageCache[url] = img;
     }
-    const img = new Image();
-    img.src = url;
-    imageCache[url] = img; // Cache the image
-    return img;
+    return imageCache[url];
   };
 
   const drawNodeWithImage = (node, ctx) => {
     const imgSize = 60;
     const img = loadImage(node.img);
 
-    if (img.complete) {
-      // If image is already loaded, draw it
-
+    if (img.complete && img.naturalWidth !== 0) {
       ctx.save();
-      ctx.drawImage(img, node.x - imgSize / 2, node.y, imgSize, imgSize);
+      ctx.drawImage(
+        img,
+        node.x - imgSize / 2,
+        node.y - imgSize / 2 + 30,
+        imgSize,
+        imgSize
+      );
       ctx.restore();
     }
   };
@@ -102,8 +137,6 @@ function DotsGraph() {
 
   const handleClickOutside = (event) => {
     if (modalRef.current && !modalRef.current.contains(event.target)) {
-      console.log("fcuk");
-
       setIsCreateNode(false);
     }
   };
@@ -165,7 +198,8 @@ function DotsGraph() {
           ref={fgRef}
           graphData={graphData}
           linkColor={() => "rgba(255, 255, 255, 0.87)"}
-          width={1000}
+          width={1300}
+          className="h-screen"
           onNodeRightClick={deleteNode}
           onNodeClick={(node) => {
             setId(node.id);
