@@ -3,7 +3,7 @@ import { ForceGraph2D } from "react-force-graph";
 import CreateNode from "./CreateNode";
 import * as d3 from "d3-force";
 
-function DotsGraph() {
+function DotsGraph({ isLanding = false }) {
   const [isCreateNode, setIsCreateNode] = useState(false);
   const fgRef = useRef();
   const [note, setNote] = useState();
@@ -15,52 +15,63 @@ function DotsGraph() {
       {
         id: 0,
         name: "Birth & Adoption",
-        img: "https://images.pexels.com/photos/447340/pexels-photo-447340.jpeg?auto=compress&cs=tinysrgb&w=600",
+        img: "https://images.pexels.com/photos/209067/pexels-photo-209067.jpeg?auto=compress&cs=tinysrgb&w=600",
       },
       {
         id: 1,
         name: "College Dropout",
-        img: "https://images.pexels.com/photos/256401/pexels-photo-256401.jpeg?auto=compress&cs=tinysrgb&w=600",
+        img: "https://images.pexels.com/photos/34622/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=600",
       },
       {
         id: 2,
         name: "Calligraphy Class",
-        img: "https://images.pexels.com/photos/356052/pexels-photo-356052.jpeg?auto=compress&cs=tinysrgb&w=600",
+        img: "https://images.pexels.com/photos/3727489/pexels-photo-3727489.jpeg?auto=compress&cs=tinysrgb&w=600",
       },
       {
         id: 3,
         name: "Apple Founded",
-        img: "https://images.pexels.com/photos/1391907/pexels-photo-1391907.jpeg?auto=compress&cs=tinysrgb&w=600",
+        img: "https://images.pexels.com/photos/376150/pexels-photo-376150.jpeg?auto=compress&cs=tinysrgb&w=600",
       },
       {
         id: 4,
         name: "Next Inc.",
-        img: "https://images.pexels.com/photos/3937174/pexels-photo-3937174.jpeg?auto=compress&cs=tinysrgb&w=600",
+        img: "https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg?auto=compress&cs=tinysrgb&w=600",
       },
       {
         id: 5,
         name: "Pixar Success",
-        img: "https://images.pexels.com/photos/4348403/pexels-photo-4348403.jpeg?auto=compress&cs=tinysrgb&w=600",
+        img: "https://images.pexels.com/photos/335656/pexels-photo-335656.jpeg?auto=compress&cs=tinysrgb&w=600",
       },
       {
         id: 6,
         name: "Return to Apple",
-        img: "https://images.pexels.com/photos/4551090/pexels-photo-4551090.jpeg?auto=compress&cs=tinysrgb&w=600",
+        img: "https://images.pexels.com/photos/2878701/pexels-photo-2878701.jpeg?auto=compress&cs=tinysrgb&w=600",
       },
       {
         id: 7,
         name: "iPhone Launch",
         img: "https://images.pexels.com/photos/6078124/pexels-photo-6078124.jpeg?auto=compress&cs=tinysrgb&w=600",
       },
+      {
+        id: 8,
+        name: "Legacy & Vision",
+        img: "https://images.pexels.com/photos/374074/pexels-photo-374074.jpeg?auto=compress&cs=tinysrgb&w=600",
+      },
     ],
     links: [
-      { source: 0, target: 1 },
+      // { source: 0, target: 1 },
       { source: 1, target: 2 },
       { source: 2, target: 3 },
       { source: 3, target: 4 },
       { source: 4, target: 5 },
       { source: 5, target: 6 },
       { source: 6, target: 7 },
+      { source: 7, target: 8 },
+
+      // { source: 0, target: 3 },
+      // { source: 1, target: 5 },
+      // { source: 2, target: 6 },
+      { source: 0, target: 8 },
     ],
   });
   const [id, setId] = useState(graphData.nodes ? graphData.nodes.length : 0);
@@ -171,28 +182,42 @@ function DotsGraph() {
           id={id}
         />
       ) : null}
-      <div>
-        <button
-          style={{ marginLeft: 20 }}
-          onClick={() => fgRef.current.zoomToFit(1000, 100)}
-          className="mr-4 my-4 cursor-pointer bg-white text-[#242424] rounded-md px-3 py-1 hover:border-[#242424] hover:scale-x-110 transition-all border-2"
-        >
-          zoomToFit
-        </button>
-        <button
-          style={{ marginLeft: 20 }}
-          onClick={() => {
-            setId(graphData.nodes ? graphData.nodes.length : 0);
-            setNote("");
-            setImageURL("");
-            setIsEditable(true);
-            setIsCreateNode(true);
-          }}
-          className="mr-4 my-4 cursor-pointer bg-white text-[#242424] rounded-md px-3 py-1 hover:border-[#242424] hover:scale-x-110 transition-all border-2"
-        >
-          New Dot
-        </button>
-      </div>
+      {!isLanding ? (
+        <div>
+          <button
+            style={{ marginLeft: 20 }}
+            onClick={() => fgRef.current.zoomToFit(1000, 100)}
+            className="mr-4 my-4 cursor-pointer bg-white text-[#242424] rounded-md px-3 py-1 hover:border-[#242424] hover:scale-x-110 transition-all border-2"
+          >
+            zoomToFit
+          </button>
+          <button
+            style={{ marginLeft: 20 }}
+            onClick={() => {
+              setGraphData({
+                nodes: [],
+                links: [],
+              });
+            }}
+            className="mr-4 my-4 cursor-pointer bg-white text-[#242424] rounded-md px-3 py-1 hover:border-[#242424] hover:scale-x-110 transition-all border-2"
+          >
+            Reset Canvas
+          </button>
+          <button
+            style={{ marginLeft: 20 }}
+            onClick={() => {
+              setId(graphData.nodes ? graphData.nodes.length : 0);
+              setNote("");
+              setImageURL("");
+              setIsEditable(true);
+              setIsCreateNode(true);
+            }}
+            className="mr-4 my-4 cursor-pointer bg-white text-[#242424] rounded-md px-3 py-1 hover:border-[#242424] hover:scale-x-110 transition-all border-2"
+          >
+            New Dot
+          </button>
+        </div>
+      ) : null}
       <div>
         <ForceGraph2D
           ref={fgRef}
@@ -215,7 +240,7 @@ function DotsGraph() {
             // Optionally draw default node (circle or something else)
             ctx.beginPath();
             ctx.arc(node.x, node.y, 5, 0, 2 * Math.PI, false);
-            ctx.fillStyle = "blue";
+            ctx.fillStyle = "black";
             ctx.fill();
             ctx.strokeStyle = "white";
             ctx.stroke();

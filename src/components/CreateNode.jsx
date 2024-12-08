@@ -60,25 +60,27 @@ function CreateNode({
             className="rounded-lg px-4 w-[300px] py-2 outline-none text-[#242424]"
           />
         </div>
-        <button
-          className="mr-4 my-4 cursor-pointer bg-white text-[#242424] rounded-md px-3 py-1 hover:border-[#242424] hover:scale-x-110 transition-all border-2"
-          onClick={() => {
-            if (note && imageURL) {
-              let newData = {
-                node: { id: id, name: note, img: imageURL },
-                link: { source: id, target: target },
-              };
-              let newGraphData = {
-                nodes: [...graphData.nodes, newData.node],
-                links: [...graphData.links, newData.link],
-              };
-              setGraphData(newGraphData);
-            }
-            setIsCreateNode(false);
-          }}
-        >
-          Create
-        </button>
+        {isEditable ? (
+          <button
+            className="mr-4 my-4 cursor-pointer bg-white text-[#242424] rounded-md px-3 py-1 hover:border-[#242424] hover:scale-x-110 transition-all border-2"
+            onClick={() => {
+              if (note && imageURL) {
+                let newData = {
+                  node: { id: id, name: note, img: imageURL },
+                  link: { source: id, target: target },
+                };
+                let newGraphData = {
+                  nodes: [...graphData.nodes, newData.node],
+                  links: [...graphData.links, newData.link],
+                };
+                setGraphData(newGraphData);
+              }
+              setIsCreateNode(false);
+            }}
+          >
+            Create
+          </button>
+        ) : null}
       </div>
     </div>
   );
